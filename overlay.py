@@ -128,8 +128,7 @@ def is_valid_insertion_position(bgnd_mask, fgnd_size, pos):
   source_mask = np.zeros(bgnd_mask.shape, dtype=np.uint8)
   source_mask[pos[0]:pos[0]+fgnd_size[0], pos[1]:pos[1]+fgnd_size[1]] = 255
   colissions = np.logical_and(source_mask, np.logical_not(bgnd_mask))
-  all_zeros = not colissions.any()
-  return all_zeros
+  return not colissions.any()
 
 
 def transform_fgnd_relative(fgnd, bgnd, scale_min, scale_max):

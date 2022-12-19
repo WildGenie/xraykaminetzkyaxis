@@ -18,8 +18,7 @@ def load_color_backgrounds(dir, extension):
 
   for filename in filenames:
     img_bgr = cv2.imread(os.path.join(dir, filename), cv2.IMREAD_COLOR)
-    img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
-    yield img_rgb
+    yield cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
 
 
 @cache
@@ -70,24 +69,23 @@ def delete_and_create_dir(path):
 
 def save_data(filename_with_extension, img_extension, dir_output, img,
               bounding_boxes, category):
-    filename = os.path.splitext(filename_with_extension)[0]
-    img_path = os.path.join(dir_output, 'images', category,
-                            f'{filename}.{img_extension}')
-    plt.imsave(img_path, img, cmap='gray')
+  filename = os.path.splitext(filename_with_extension)[0]
+  img_path = os.path.join(dir_output, 'images', category,
+                          f'{filename}.{img_extension}')
+  plt.imsave(img_path, img, cmap='gray')
 
-    bbox_path = os.path.join(dir_output, 'labels', category,
-                             filename + '.txt')
+  bbox_path = os.path.join(dir_output, 'labels', category, f'{filename}.txt')
 
-    bbox_text = ''
-    for bbox in bounding_boxes:
-      obj_cat = 0
-      center_y = bbox['pos_y'] + bbox['size_y'] / 2
-      center_x = bbox['pos_x'] + bbox['size_x'] / 2
-      center_y_rel = center_y / img.shape[0]
-      center_x_rel = center_x / img.shape[1]
-      size_y_rel = bbox['size_y'] / img.shape[0]
-      size_x_rel = bbox['size_x'] / img.shape[1]
-      bbox_text += (f'{obj_cat} {center_x_rel} {center_y_rel} {size_x_rel} '
-                    f'{size_y_rel}\n')
-    with open(bbox_path, 'w') as file:
-      file.write(bbox_text)
+  bbox_text = ''
+  obj_cat = 0
+  for bbox in bounding_boxes:
+    center_y = bbox['pos_y'] + bbox['size_y'] / 2
+    center_x = bbox['pos_x'] + bbox['size_x'] / 2
+    center_y_rel = center_y / img.shape[0]
+    center_x_rel = center_x / img.shape[1]
+    size_y_rel = bbox['size_y'] / img.shape[0]
+    size_x_rel = bbox['size_x'] / img.shape[1]
+    bbox_text += (f'{obj_cat} {center_x_rel} {center_y_rel} {size_x_rel} '
+                  f'{size_y_rel}\n')
+  with open(bbox_path, 'w') as file:
+    file.write(bbox_text)

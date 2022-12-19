@@ -61,8 +61,7 @@ def get_largest_regions(img, min_area_percent):
     if cv2.contourArea(contour) >= min_pixels:
       cv2.drawContours(mask_largest, [contour], 0, 255, -1)
 
-  img_largest_regions = cv2.bitwise_and(img, img, mask=mask_largest)
-  return img_largest_regions
+  return cv2.bitwise_and(img, img, mask=mask_largest)
 
 
 def zero_pad_image(img, size, pos):
@@ -101,8 +100,7 @@ def scale_img(img, scale):
   height = int(img.shape[0] * scale)
   width = int(img.shape[1] * scale)
   interpolation = cv2.INTER_AREA if scale < 1 else cv2.INTER_CUBIC
-  img_scaled = cv2.resize(img, (width, height), interpolation=interpolation)
-  return img_scaled
+  return cv2.resize(img, (width, height), interpolation=interpolation)
 
 
 def scale_relative(fgnd, bgnd, scale_min, scale_max):
@@ -114,15 +112,18 @@ def scale_relative(fgnd, bgnd, scale_min, scale_max):
   width = int(fgnd.shape[1] * scale)
   interpolation = cv2.INTER_AREA if scale < 1 else cv2.INTER_CUBIC
 
-  fgnd_scaled = cv2.resize(fgnd, (width, height), interpolation=interpolation)
-
-  return fgnd_scaled
+  return cv2.resize(fgnd, (width, height), interpolation=interpolation)
 
 
 def rotate_random(img):
-  img_rot = ndimage.rotate(img, np.random.randint(0, 359), order=1,
-                           reshape=True, mode='constant', cval=255)
-  return img_rot
+  return ndimage.rotate(
+      img,
+      np.random.randint(0, 359),
+      order=1,
+      reshape=True,
+      mode='constant',
+      cval=255,
+  )
 
 
 def mirror_random(img):
@@ -140,5 +141,4 @@ def crop_white_borders(img, threshold=250, offset=2):
   x_start = max(np.min(dark_coords[1]) - offset, 0)
   x_end = min(np.max(dark_coords[1]) + offset, img.shape[1])
 
-  img_cropped = img[y_start:y_end, x_start:x_end]
-  return img_cropped
+  return img[y_start:y_end, x_start:x_end]
