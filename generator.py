@@ -8,20 +8,18 @@ import overlay
 
 def sample_images_with_qty_prob(imgs, qty_prob):
   qty = np.random.choice(list(qty_prob.keys()), p=list(qty_prob.values()))
-  sampled_imgs = random.sample(imgs, qty)
-  return sampled_imgs
+  return random.sample(imgs, qty)
 
 
 def get_category(index, total, train_val_ratio):
   if index < total * train_val_ratio['train']:
-      category = 'train'
+    return 'train'
   elif (index < total
         * (train_val_ratio['train']
             + train_val_ratio['valid'])):
-      category = 'valid'
+    return 'valid'
   else:
-      category = 'test'
-  return category
+    return 'test'
 
 
 def generate_simulated_images(

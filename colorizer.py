@@ -67,10 +67,7 @@ class Colorizer:
       for i in range(img_color.shape[1]):
         low_pixel = img_low[j, i]
         high_pixel = img_high[j, i]
-        if low_pixel == 0:
-          # Prevents calculating the log of zero
-          value = (0, 0, 0)
-        elif high_pixel == 0:
+        if low_pixel == 0 or high_pixel == 0:
           # Prevents calculating the log of zero
           value = (0, 0, 0)
         elif high_pixel == 1:
@@ -113,11 +110,11 @@ class Colorizer:
     img_hsv = cv2.cvtColor(img_color, cv2.COLOR_RGB2HSV)
 
     location_blobs = generate_perlin_noise_2d((400, 400), (4, 4)) * 0.5 + 0.5
-    dark_mask = (generate_perlin_noise_2d((400, 400), (4, 4)) * 0.5 + 0.5) > 0.7
+    dark_mask = generate_perlin_noise_2d((400, 400), (4, 4)) > 0.3999999999999999
     big_blobs = generate_perlin_noise_2d((400, 400), (8, 8)) * 0.5 + 0.5
     small_blobs = generate_perlin_noise_2d((400, 400), (16, 16)) * 0.5 + 0.5
     blobs_mask = ((big_blobs > 0.7) + (small_blobs > 0.7)) * (location_blobs > 0.5)
-    
+
     img_hsv_hue = img_hsv[:, :, 0]
     img_hsv_sat = img_hsv[:, :, 1]
     img_hsv_val = img_hsv[:, :, 2]
@@ -145,7 +142,7 @@ class Colorizer:
 
     img_hsv[:, :, 1] = img_hsv_sat_new
     img_hsv[:, :, 2] = img_hsv_val_new
-    
+
     img_color = cv2.cvtColor(img_hsv, cv2.COLOR_HSV2RGB)
 
     return img_color
